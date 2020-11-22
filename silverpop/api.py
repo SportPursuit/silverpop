@@ -437,6 +437,7 @@ class API(object):
             out[columns['NAME']] = columns['VALUE']
         else:
             for column in columns:
+                # The 'url' field occasionally contails data that breaks the csv import
                 if column['NAME'].lower() != 'url':
                     out[column['NAME']] = column['VALUE']
 
