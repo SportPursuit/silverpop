@@ -437,7 +437,8 @@ class API(object):
             out[columns['NAME']] = columns['VALUE']
         else:
             for column in columns:
-                out[column['NAME']] = column['VALUE']
+                if column['NAME'].lower() != 'url':
+                    out[column['NAME']] = column['VALUE']
 
         data['COLUMNS'] = out
 
