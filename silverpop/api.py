@@ -437,6 +437,27 @@ class API(object):
             out[columns['NAME']] = columns['VALUE']
         else:
             for column in columns:
+                out[column['NAME']] = column['VALUE']
+
+        data['COLUMNS'] = out
+
+        return data
+        
+    def _sanitize_columns_exclude_url(self, data):
+        """ A replica of the abov method which excludes the 'url' field.
+        Used only for the raw recipiebt data import
+        """
+        columns = data.get('COLUMNS', {}).get('COLUMN', [])
+
+        # Don't touch the original data if there aren't any columns.
+        if len(columns) < 1:
+            return data
+
+        out = {}
+        if type(columns) == dict:
+            out[columns['NAME']] = columns['VALUE']
+        else:
+            for column in columns:
                 # The 'url' field occasionally contails data that breaks the csv import
                 if column['NAME'].lower() != 'url':
                     out[column['NAME']] = column['VALUE']
@@ -501,8 +522,10 @@ class API(object):
                 pass
             else:
                 raise exc
-
-        return self._sanitize_columns_in_api_result(response['RESULT']), success
+        if xml_dict.get('Envelope', {}).get('Body', {}).get('RawRecipientDataExport'):
+            return self._sanitize_columns_exclude_url(response['RESULT']), success
+        else:
+            return self._sanitize_columns_in_api_result(response['RESULT']), success
 
     def get_scheduled_mailings_for_org(self):
 
