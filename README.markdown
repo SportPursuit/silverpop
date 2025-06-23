@@ -2,6 +2,8 @@
 
 This is a simple wrapper for the Silverpop API.
 
+THIS REPO IS DEPRECATED, please use bitbucket for internal development
+
 ## Usage:
 
     >>> from silverpop import API
